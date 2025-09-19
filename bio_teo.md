@@ -1,0 +1,3 @@
+- Name : Teofebano Kristo
+- NIM : 12345
+- Hobby : bikin susah mahasiswa
