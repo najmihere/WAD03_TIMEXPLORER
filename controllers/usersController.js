@@ -1,28 +1,36 @@
-const User = require("../models/userModel");
+const userService = require("../services/userService");
 
 exports.createUser = (req, res) => {
-  const newUser = User.create(req.body);
-  res.status(201).json(newUser);
+  try {
+    const newUser = userService.createUser(req.body);
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(err.status || 500).json({ message: err.message });
+  }
 };
 
 exports.getUsers = (req, res) => {
-  res.json(User.getAll());
+  const users = userService.getAllUsers();
+  res.json(users);
 };
 
 exports.getUserById = (req, res) => {
-  const user = User.getById(parseInt(req.params.id));
+  const id = parseInt(req.params.id);
+  const user = userService.getUserById(id);
   if (!user) return res.status(404).json({ message: "User not found" });
   res.json(user);
 };
 
 exports.updateUser = (req, res) => {
-  const updated = User.update(parseInt(req.params.id), req.body);
+  const id = parseInt(req.params.id);
+  const updated = userService.updateUser(id, req.body);
   if (!updated) return res.status(404).json({ message: "User not found" });
   res.json(updated);
 };
 
 exports.deleteUser = (req, res) => {
-  const deleted = User.delete(parseInt(req.params.id));
+  const id = parseInt(req.params.id);
+  const deleted = userService.deleteUser(id);
   if (!deleted) return res.status(404).json({ message: "User not found" });
   res.json(deleted);
 };
