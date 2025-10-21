@@ -8,6 +8,7 @@ app.use(express.json());
 // Import routes
 const userRoutes = require('./routes/users');
 app.use('/users', userRoutes);
+app.use('/carts', require('./routes/cart'));
 
 // Root endpoint
 app.get('/', (req, res) => {
