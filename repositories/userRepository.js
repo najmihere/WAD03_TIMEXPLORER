@@ -1,43 +1,34 @@
-let users = [
-  { id: 1, username: "najmi", name: "Najmi", email: "najmi@mail.com", role: "seller" },
-  { id: 2, username: "budi", name: "Budi", email: "budi@mail.com", role: "buyer" }
-];
-let idCounter = users.length ? users[users.length - 1].id + 1 : 1;
+const { User } = require('../database');
 
 const userRepository = {
-  findAll() {
-    return users;
+  async findAll() {
+    return await User.findAll();
   },
 
-  findById(id) {
-    return users.find(u => u.id === id);
+  async findById(id) {
+    return await User.findByPk(id);
   },
 
-  findByUsername(username) {
-    return users.find(u => u.username === username);
+  async findByUsername(username) {
+    return await User.findOne({ where: { username } });
   },
 
-  create({ username, name, email, role }) {
-    const newUser = { id: idCounter++, username, name, email, role };
-    users.push(newUser);
-    return newUser;
+  async create({ username, name, email, role }) {
+    return await User.create({ username, name, email, role });
   },
 
-  update(id, { username, name, email, role }) {
-    const user = users.find(u => u.id === id);
+  async update(id, data) {
+    const user = await User.findByPk(id);
     if (!user) return null;
-    if (username) user.username = username;
-    if (name) user.name = name;
-    if (email) user.email = email;
-    if (role) user.role = role;
+    return await user.update(data);
+  },
+
+  async remove(id) {
+    const user = await User.findByPk(id);
+    if (!user) return null;
+    await user.destroy();
     return user;
   },
-
-  remove(id) {
-    const idx = users.findIndex(u => u.id === id);
-    if (idx === -1) return null;
-    return users.splice(idx, 1)[0];
-  }
 };
 
 module.exports = userRepository;
